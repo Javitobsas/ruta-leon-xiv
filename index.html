@@ -282,7 +282,6 @@ details.g p{color:var(--muted);margin-top:6px;font-size:.95rem}
 .frame{aspect-ratio:4/3;border:2px dashed var(--line);border-radius:12px;display:grid;place-items:center;text-align:center;padding:14px;color:var(--muted);font-size:.9rem;background:var(--card)}
 figure.work{margin:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 figure.work img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
-figure.work input{border:0;border-top:1px solid var(--line);border-radius:0;min-height:38px;font-size:.9rem}
 .aula{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;counter-reset:a}
 .act{padding:16px;display:grid;gap:6px;align-content:start;counter-increment:a}
 .act::before{content:counter(a);font-family:Fraunces,Georgia,serif;font-size:1.6rem;font-weight:700;color:var(--gold);line-height:1}
@@ -1048,7 +1047,7 @@ details.logod p{color:var(--muted);font-size:.9rem;margin-top:6px}
       <li>Observá el escudo: ¿cómo está dividido? ¿Qué hay en cada parte? Buscá también las dos llaves cruzadas, los cordones rojos y la cinta con el lema. ¿Qué otras cosas ves?</li>
       <li>Leé el lema en voz alta. ¿Qué palabras se parecen al castellano? ¿Qué te dice que «uno» aparezca dos veces?</li>
       <li>Compará con el escudo de nuestra escuela, en el encabezado: ¿qué símbolos tiene? ¿Qué quieren contar de nosotros?</li>
-      <li>Desafío: dibujá un escudo para tu curso. Dividilo en dos partes, elegí un símbolo para cada una y escribí un lema corto. Podés sumarlo en «Nuestra galería».</li>
+      <li>Desafío: dibujá un escudo para tu curso. Dividilo en dos partes, elegí un símbolo para cada una y escribí un lema corto. Mostráselo a tu docente: puede sumarlo en «Nuestra galería».</li>
     </ul>
     <p class="sedes-note">Fuente: Orden de San Agustín, nota «“In illo uno unum”: explicación detallada del escudo y lema pontificios elegidos por León XIV para su papado» (15/05/2025). Los datos de esta sección están resumidos de esa nota y se presentan como lo que ella dice. <a href="https://www.augustinianorder.org/post/in-illo-uno-unum-explicaci%C3%B3n-detallada-del-escudo-y-lema-pontificios-elegidos-por-le%C3%B3n-xiv-para-s?lang=es" target="_blank" rel="noopener noreferrer">Leer la nota completa ↗</a></p>
   </div>
@@ -1178,14 +1177,9 @@ details.logod p{color:var(--muted);font-size:.9rem;margin-top:6px}
   <div class="sec-head">
     <span class="eyebrow">Hecho por nosotros</span>
     <h2>Dibujos y textos de 2.º año</h2>
-    <p>Este espacio está reservado para los dibujos y los escritos de los estudiantes de la E.E.S. N.º 30 «Carlos Gardel».</p>
+    <p>Este espacio está reservado para los dibujos y los escritos de los estudiantes de la E.E.S. N.º 30 «Carlos Gardel». Los trabajos los incorpora el docente, con el nombre de su autor o autora.</p>
   </div>
   <div class="gal" id="gal"></div>
-  <div class="card tool" style="margin-top:16px;max-width:560px">
-    <h3 style="font-size:1.05rem">Para proyectar en clase</h3>
-    <label>Sumá un dibujo desde tu dispositivo<input type="file" id="galFile" accept="image/*" multiple></label>
-    <p style="font-size:.85rem;color:var(--muted)">Las imágenes se ven solo en esta pantalla y no se guardan en la página.</p>
-  </div>
 </section>
 
 <section class="sec" id="proyecto">
@@ -1731,22 +1725,6 @@ const gal = $("#gal");
 const ph = ["Aquí va un dibujo de 2.º año", "Aquí va un texto de 2.º año", "Aquí va un dibujo de 2.º año", "Aquí va una crónica del viaje", "Aquí va un dibujo de 2.º año", "Aquí va un poema o una carta"];
 const GI = ["pencil", "book", "pencil", "news", "pencil", "heart"];
 gal.innerHTML = ph.map((t, i) => '<div class="frame">' + ico(GI[i], 30) + "<span>" + t + "</span></div>").join("");
-$("#galFile").addEventListener("change", (ev) => {
-  for (const f of Array.from(ev.target.files || [])) {
-    if (!/^image\//.test(f.type)) continue;
-    const r = new FileReader();
-    r.onload = () => {
-      const fig = document.createElement("figure"); fig.className = "work";
-      const img = document.createElement("img"); img.src = r.result; img.alt = "Dibujo de un estudiante";
-      const cap = document.createElement("input"); cap.type = "text"; cap.placeholder = "Título y autor/a"; cap.setAttribute("aria-label", "Título del dibujo");
-      fig.appendChild(img); fig.appendChild(cap);
-      const first = gal.querySelector(".frame"); if (first) first.remove();
-      gal.prepend(fig);
-    };
-    r.readAsDataURL(f);
-  }
-  ev.target.value = "";
-});
 
 /* ===== arranque ===== */
 heroView.render("globe");
