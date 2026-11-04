@@ -1,0 +1,29 @@
+RUTA DE LEÓN XIV: página lista para publicar en Vercel
+=======================================================
+
+Contenido de esta carpeta
+- index.html   La página completa (un solo archivo, sin instalar nada).
+- vercel.json  Configuración mínima para Vercel (opcional).
+
+Forma 1: con GitHub (sin instalar programas)
+1. Entrá a github.com/new y creá un repositorio (por ejemplo: ruta-leon-xiv).
+2. Elegí "uploading an existing file" y subí index.html y vercel.json. Confirmá con "Commit changes".
+3. Entrá a vercel.com, elegí Add New > Project, importá ese repositorio.
+4. En "Framework Preset" dejá "Other". No cambies nada más y tocá Deploy.
+5. Vercel te da una dirección como ruta-leon-xiv.vercel.app.
+
+Forma 2: con la consola (necesita Node.js)
+1. Abrí una terminal dentro de esta carpeta.
+2. Ejecutá: npx vercel --prod
+3. Iniciá sesión cuando lo pida y aceptá las opciones que propone.
+
+Para actualizar la página
+Reemplazá index.html por la versión nueva (en GitHub: "Add file > Upload files"). Vercel publica solo.
+
+Para que la dirección sea pública
+Si Vercel te pide login para abrir la página, entrá a Settings > Deployment Protection del proyecto y desactivá "Vercel Authentication" para producción.
+
+Antes de difundirla
+- La foto del Papa (sección "Quién es León XIV") es de CNS/Vatican Media: confirmá los derechos de uso.
+- Las fotos de las sedes son de la Conferencia Episcopal Argentina (uso público según el docente).
+- Los mapas del barrio usan datos de OpenStreetMap (© colaboradores de OpenStreetMap, licencia ODbL); el crédito ya figura en la página.
