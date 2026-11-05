@@ -1779,11 +1779,8 @@ const WORKS = [
   { k: "informacion", h: 1222, t: "Información sobre el Papa León XIV", a: "Estudiante de 2.º año", alt: "Hoja rayada escrita a lápiz con el título «Información sobre el Papa León XIV». Anota su fecha de nacimiento, su educación, el nombre de sus padres, los idiomas que habla y su cargo como soberano del Estado de la Ciudad del Vaticano." },
   { k: "origenes", h: 1263, t: "Los orígenes de la familia de León XIV", a: "Estudiante de 2.º año", alt: "Hoja rayada escrita a lápiz sobre el lugar donde nació León XIV, su infancia en Dolton, a las afueras de Chicago, y el origen familiar de sus padres." }
 ];
-const ph = ["Aquí va un dibujo de 2.º año", "Aquí va una crónica del viaje"];
-const GI = ["pencil", "news"];
 const ZOOM_IC = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>';
-gal.innerHTML = WORKS.map((w, i) => '<figure class="work"><button type="button" class="wk" data-i="' + i + '"><img src="' + IMG_WORKS[w.k] + '" width="1000" height="' + w.h + '" alt="Texto manuscrito: ' + esc(w.t) + '"><span class="zoom">' + ZOOM_IC + "Ampliar</span></button><figcaption><span class=\"wtag\">Texto manuscrito</span><b class=\"wt\">" + esc(w.t) + '</b><span class="wa">' + esc(w.a) + "</span></figcaption></figure>").join("") +
-  ph.map((t, i) => '<div class="frame">' + ico(GI[i], 30) + "<span>" + t + "</span></div>").join("");
+gal.innerHTML = WORKS.map((w, i) => '<figure class="work"><button type="button" class="wk" data-i="' + i + '"><img src="' + IMG_WORKS[w.k] + '" width="1000" height="' + w.h + '" alt="Texto manuscrito: ' + esc(w.t) + '"><span class="zoom">' + ZOOM_IC + "Ampliar</span></button><figcaption><span class=\"wtag\">Texto manuscrito</span><b class=\"wt\">" + esc(w.t) + '</b><span class="wa">' + esc(w.a) + "</span></figcaption></figure>").join("");
 
 /* visor de los trabajos */
 const lb = $("#lb"), lbImg = $("#lbImg"), lbStage = $("#lbStage"), lbZoom = $("#lbZoom");
