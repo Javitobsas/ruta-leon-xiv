@@ -874,6 +874,23 @@ details.logod p{color:var(--muted);font-size:.9rem;margin-top:6px}
 .fshare{display:grid;gap:8px;padding:18px 20px;min-width:0}
 .fsteps{margin:0;padding-left:1.3rem;display:grid;gap:8px}
 .fsteps li{line-height:1.45;overflow-wrap:anywhere}
+/* seguimiento del vuelo */
+.card.vivo{padding:18px;display:grid;gap:12px;margin:0 0 22px;border-left:5px solid var(--route);min-width:0}
+.vivo-top{display:flex;gap:10px 14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between}
+.card.vivo h3{font-size:1.2rem;line-height:1.25}
+.vivo .vsub{color:var(--muted);font-size:.92rem}
+.vchip{display:inline-flex;align-items:center;gap:7px;font-weight:800;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:var(--bg2);color:var(--ink)}
+.vchip i{width:9px;height:9px;border-radius:50%;background:var(--muted);display:inline-block}
+.vchip.air i{background:var(--route);animation:vpulse 1.6s ease-in-out infinite}
+@keyframes vpulse{50%{opacity:.3}}
+@media (prefers-reduced-motion:reduce){.vchip.air i{animation:none}}
+.vsvg{width:100%;max-width:560px;height:auto;display:block;margin-inline:auto}
+.vends{width:100%;max-width:560px;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;font-size:.86rem;color:var(--muted)}
+.vends b{display:block;color:var(--ink)}
+.vends>div:last-child{text-align:right}
+.vtxt{font-size:1rem;font-weight:600}
+.vnote{font-size:.82rem;color:var(--muted)}
+.card.vivo .btnrow a.btn{white-space:normal}
 
 </style>
 <nav class="nav" aria-label="Secciones"><div class="nav-in">
@@ -973,6 +990,7 @@ details.logod p{color:var(--muted);font-size:.9rem;margin-top:6px}
     <h2>Noticias de la visita</h2>
     <p>Lo que ocurrió entre el viernes 6 y el miércoles 11 de noviembre, contado con nuestras palabras a partir de las crónicas de Vatican News, EWTN, AP y medios de Uruguay y la Argentina. Cada tarjeta indica su fuente y trae el enlace para leer la nota completa. Además, cada acto con discurso, homilía o saludo del Papa trae el <b>enlace al texto completo</b> (casi siempre en el sitio oficial de la Santa Sede) y sus <b>ideas principales</b>; al final hay un <a href="#indiceTextos">índice de todos los textos</a>. Los horarios son los del programa oficial. Contamos hechos, sin entrar en discusiones políticas. <b>Actualizado el <span id="newsUpd"></span>.</b></p>
   </div>
+  <div class="card vivo" id="vueloVivo"></div>
   <div class="chips newsdays" id="newsDays" role="group" aria-label="Filtrar las noticias por día"></div>
   <div class="newsgrid" id="newsGrid" aria-live="polite"></div>
   <div class="proximos" id="proximos"></div>
@@ -2025,6 +2043,59 @@ $("#newsDays").addEventListener("click", (ev) => {
 renderNewsDays(); renderNews();
 $("#indiceTextos").innerHTML = renderTextIndex();
 $("#proximos").innerHTML = '<h3>Lo que sigue</h3><p class="pn">Según el programa oficial. Con el mapa del viaje podés ver cada horario.</p><div class="pgrid">' + PROXIMOS.map((p) => '<div class="card prox"><b>' + esc(p.dia) + "</b><h4>" + esc(p.t) + "</h4><p>" + esc(p.x) + "</p></div>").join("") + '</div><div><a class="btn" href="#mapa">Ver los días en el mapa</a></div>';
+
+/* ===== seguimiento del vuelo del Papa a Lima (AR1096) ===== */
+const VUELO = {
+  fr24: "https://www.flightradar24.com/ARG1096/42880567",
+  fa: "https://www.flightaware.com/live/flight/ARG1096",
+  infobae: "https://www.infobae.com/peru/2026/11/11/papa-leon-xiv-en-peru-en-vivo-minuto-a-minuto-de-su-llegada-recorrido-calles-cerradas-y-ultimas-noticias-del-santo-padre/",
+  dep: Date.UTC(2026, 10, 11, 17, 38), /* 14:38 en la Argentina (Vatican News) */
+  arr: Date.UTC(2026, 10, 11, 22, 30), /* 17:30 en Lima = 19:30 en la Argentina (programa oficial peruano) */
+};
+function vueloDur(ms) {
+  const m = Math.max(0, Math.round(ms / 60000)), h = Math.floor(m / 60), r = m % 60;
+  return h ? h + " h" + (r ? " " + r + " min" : "") : r + " min";
+}
+function vueloInit() {
+  const el = $("#vueloVivo"); if (!el) return;
+  const plane = "M0,-10 L2.4,-2.4 L10,2.2 L10,4.4 L2.4,2.6 L1.7,7.6 L4.4,9.4 L4.4,10.8 L0,9.8 L-4.4,10.8 L-4.4,9.4 L-1.7,7.6 L-2.4,2.6 L-10,4.4 L-10,2.2 L-2.4,-2.4 Z";
+  el.innerHTML =
+    '<div class="vivo-top"><div><span class="eyebrow">Seguimiento del vuelo</span><h3 id="vvT">Seguí el vuelo del Papa a Lima</h3></div><span class="vchip" id="vvChip"><i aria-hidden="true"></i><span id="vvChipT"></span></span></div>' +
+    '<p class="vsub">Vuelo AR1096 de Aerolíneas Argentinas, un Airbus A330-200, de Ezeiza a Lima (Callao).</p>' +
+    '<svg class="vsvg" id="vvSvg" viewBox="0 0 360 112" role="img" aria-label="Esquema del recorrido del avión entre Buenos Aires y Lima">' +
+    '<path d="M24 92 Q180 -16 336 92" fill="none" stroke="var(--line)" stroke-width="3" stroke-dasharray="3 7" stroke-linecap="round"/>' +
+    '<path id="vvDone" d="M24 92 Q180 -16 336 92" fill="none" stroke="var(--route)" stroke-width="4" stroke-linecap="round" stroke-dasharray="0 1000"/>' +
+    '<circle cx="24" cy="92" r="6" fill="var(--gold)" stroke="var(--card)" stroke-width="2.5"/><circle cx="336" cy="92" r="6" fill="var(--gold)" stroke="var(--card)" stroke-width="2.5"/>' +
+    '<g id="vvPlane"><circle r="15" fill="var(--card)" stroke="var(--route)" stroke-width="2"/><path d="' + plane + '" fill="var(--route)" transform="scale(.9)"/></g></svg>' +
+    '<div class="vends"><div><b>Ezeiza, Buenos Aires</b>salida pasadas las 14 h</div><div><b>Lima, Callao</b>llegada prevista 17:30 (hora de Lima)</div></div>' +
+    '<p class="vtxt" id="vvTxt"></p>' +
+    '<div class="btnrow"><a class="btn primary" href="' + VUELO.fr24 + '" target="_blank" rel="noopener noreferrer">' + ico("send", 16) + 'Ver el avión en vivo (Flightradar24) ↗</a>' +
+    '<a class="btn" href="' + VUELO.fa + '" target="_blank" rel="noopener noreferrer">Buscar AR1096 en FlightAware ↗</a>' +
+    '<a class="btn" href="' + VUELO.infobae + '" target="_blank" rel="noopener noreferrer">Cobertura en vivo de Infobae ↗</a></div>' +
+    '<p class="vnote">El radar se abre en otra pestaña: no se puede mostrar dentro de esta página. El dibujo de arriba es solo un <b>esquema</b>: estima dónde estaría el avión con la hora de tu dispositivo y los horarios previstos (los medios informan la salida entre las 14:00 y las 14:38), así que no reemplaza al radar. Lima tiene dos horas más que la Argentina: las 17:30 de Lima son las 19:30 de acá.</p>';
+  vueloUpdate();
+  setInterval(vueloUpdate, 30000);
+}
+function vueloUpdate() {
+  const chip = $("#vvChip"), done = $("#vvDone"), pl = $("#vvPlane"); if (!chip || !done || !pl) return;
+  const now = Date.now(), p = Math.min(1, Math.max(0, (now - VUELO.dep) / (VUELO.arr - VUELO.dep)));
+  const st = now < VUELO.dep ? "pre" : now < VUELO.arr ? "air" : "post";
+  chip.className = "vchip " + st;
+  $("#vvChipT").textContent = st === "air" ? "En vuelo" : st === "pre" ? "Todavía no salió" : "Llegada prevista cumplida";
+  const pct = Math.round(p * 100);
+  $("#vvTxt").textContent = st === "air"
+    ? "Según el horario previsto, el avión lleva recorrido cerca del " + pct + " % del trayecto y faltan unas " + vueloDur(VUELO.arr - now) + " para llegar."
+    : st === "pre" ? "El avión sale de Ezeiza hoy, miércoles 11, pasadas las 14 horas."
+    : "Según el horario previsto, el vuelo ya terminó: la llegada era a las 17:30 de Lima (19:30 en la Argentina). Mirá las noticias o el radar para confirmar cómo fue.";
+  try {
+    const arc = done, len = arc.getTotalLength(), a = arc.getPointAtLength(len * p), b = arc.getPointAtLength(Math.min(len, len * p + 1)), c = arc.getPointAtLength(Math.max(0, len * p - 1));
+    const ang = Math.atan2(b.y - c.y, b.x - c.x) * 180 / Math.PI + 90;
+    arc.setAttribute("stroke-dasharray", (len * p).toFixed(1) + " " + (len + 10).toFixed(1));
+    pl.setAttribute("transform", "translate(" + a.x.toFixed(1) + " " + a.y.toFixed(1) + ") rotate(" + ang.toFixed(1) + ")");
+  } catch (e) { /* si el navegador no calcula la curva, queda el esquema sin avión */ }
+  $("#vvSvg").setAttribute("aria-label", st === "air" ? "Esquema del recorrido: el avión lleva cerca del " + pct + " % del trayecto según el horario previsto" : "Esquema del recorrido del avión entre Buenos Aires y Lima");
+}
+vueloInit();
 
 /* ===== arranque ===== */
 heroView.render("globe");
